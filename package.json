@@ -1,0 +1,18 @@
+{
+	"name": "merng-chat-app",
+	"version": "1.0.0",
+	"description": "Merng chat app",
+	"scripts": {
+		"server": "nodemon src/server.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"apollo-server": "^2.23.0",
+		"graphql": "^15.5.0",
+		"mysql2": "^2.2.5",
+		"reflect-metadata": "^0.1.13",
+		"sequelize": "^6.6.2"
+	}
+}
