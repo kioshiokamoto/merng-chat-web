@@ -1,7 +1,7 @@
 
 # Chat app (WIP)
 
-Aplicacio web con chat en tiempo real
+Aplicacion web con chat en tiempo real
 
 ## Tech Stack
 
