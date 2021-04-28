@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "Merng chat app",
 	"scripts": {
-		"server": "nodemon src/server.js"
+		"server": "nodemon src/server.js --ignore client/"
 	},
 	"keywords": [],
 	"author": "",
