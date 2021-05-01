@@ -43,7 +43,7 @@ export default function Users() {
 			return (
 				<div
 					role="button"
-					className={classNames('user-div d-flex p-3', {
+					className={classNames('user-div  d-flex justify-content-center justify-content-md-start p-3', {
 						'bg-white': selected,
 					})}
 					key={user.username}
@@ -51,11 +51,9 @@ export default function Users() {
 				>
 					<Image
 						src={user.imageUrl}
-						roundedCircle
-						className="mr-2"
-						style={{ width: 50, height: 50, objectFit: 'cover' }}
+						className="user-image"
 					/>
-					<div>
+					<div className="d-none d-md-block ml-2">
 						<p className="text-success">{user.username}</p>
 						<p className="font-weight-light">
 							{user.latestMessage ? user.latestMessage.content : 'You are now connected!'}
@@ -66,7 +64,7 @@ export default function Users() {
 		});
 	}
 	return (
-		<Col xs={4} className="p-0 bg-secondary">
+		<Col xs={2} md={4} className="p-0 bg-secondary">
 			{usersMarkup}
 		</Col>
 	);
