@@ -5,6 +5,18 @@ import { Col, Form } from 'react-bootstrap';
 import { useMessageDispatch, useMessageState } from '../../context/message';
 import Message from './Message';
 
+const SEND_MESSAGE = gql`
+	mutation sendMessage($to: String!, $content: String!) {
+		sendMessage(to: $to, content: $content) {
+			uuid
+			content
+			from
+			to
+			createdAt
+		}
+	}
+`;
+
 const GET_MESSAGES = gql`
 	query getMessages($from: String!) {
 		getMessages(from: $from) {
@@ -18,7 +30,7 @@ const GET_MESSAGES = gql`
 `;
 
 export default function Messages() {
-	const [content, setContent] = useState('')
+	const [content, setContent] = useState('');
 
 	const { users } = useMessageState();
 	const dispatch = useMessageDispatch();
@@ -27,6 +39,18 @@ export default function Messages() {
 	const messages = selectedUser?.messages;
 
 	const [getMessages, { loading: messagesLoading, data: messagesData }] = useLazyQuery(GET_MESSAGES);
+
+	const [sendMessage] = useMutation(SEND_MESSAGE, {
+		onCompleted: (data) =>
+			dispatch({
+				type: 'ADD_MESSAGE',
+				payload: {
+					username: selectedUser.username,
+					message: data.sendMessage,
+				},
+			}),
+		onError: (err) => console.log(err),
+	});
 
 	useEffect(() => {
 		if (selectedUser && !selectedUser.messages) {
@@ -48,9 +72,9 @@ export default function Messages() {
 
 	let selectedChatMarkup;
 	if (!messages && !messagesLoading) {
-		selectedChatMarkup = <p>Select a friend</p>;
+		selectedChatMarkup = <p className="info-text">Select a friend</p>;
 	} else if (messagesLoading) {
-		selectedChatMarkup = <p>Loading..</p>;
+		selectedChatMarkup = <p className="info-text">Loading..</p>;
 	} else if (messages.length > 0) {
 		selectedChatMarkup = messages.map((message, index) => (
 			<Fragment key={message.uuid}>
@@ -63,32 +87,37 @@ export default function Messages() {
 			</Fragment>
 		));
 	} else if (messages.length === 0) {
-		selectedChatMarkup = <p>You are now connected! send your first message!</p>;
+		selectedChatMarkup = <p className="info-text">You are now connected! send your first message!</p>;
 	}
 
-	const submitMessage = (e)=>{
-		e.preventDefault()
-		if(content==='') return
-
-
-
-	}
+	const submitMessage = (e) => {
+		e.preventDefault();
+		if (content.trim() === '' || !selectedUser) return;
+		setContent('');
+		sendMessage({ variables: { to: selectedUser.username, content } });
+	};
 
 	return (
-		<Col xs={10} md={8} className="messages-box d-flex flex-column-reverse">
-			{selectedChatMarkup}
-			<Form onSubmit={submitMessage}>
-				<Form.Group>
-					<Form.Control
-						type="text"
-						className="rounded-pill bg-secondary"
-						placeholder="Type a message..."
-						value={content}
-						onChange={e=>setContent(e.target.value)}
-					/>
-
-				</Form.Group>
-			</Form>
+		<Col xs={10} md={8}>
+			<div className="messages-box d-flex flex-column-reverse">{selectedChatMarkup}</div>
+			<div>
+				<Form onSubmit={submitMessage}>
+					<Form.Group className="d-flex align-items-center">
+						<Form.Control
+							type="text"
+							className="message-input p-4 rounded-pill bg-secondary border-0"
+							placeholder="Type a message..."
+							value={content}
+							onChange={(e) => setContent(e.target.value)}
+						/>
+						<i
+							role="button"
+							className="fas fa-paper-plane fa-2x text-primary ml-2"
+							onClick={submitMessage}
+						></i>
+					</Form.Group>
+				</Form>
+			</div>
 		</Col>
 	);
 }
