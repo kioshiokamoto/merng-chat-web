@@ -1,6 +1,6 @@
-import React, { Fragment, useEffect } from 'react';
-import { gql, useLazyQuery } from '@apollo/client';
-import { Col } from 'react-bootstrap';
+import React, { Fragment, useEffect, useState } from 'react';
+import { gql, useLazyQuery, useMutation } from '@apollo/client';
+import { Col, Form } from 'react-bootstrap';
 
 import { useMessageDispatch, useMessageState } from '../../context/message';
 import Message from './Message';
@@ -18,6 +18,8 @@ const GET_MESSAGES = gql`
 `;
 
 export default function Messages() {
+	const [content, setContent] = useState('')
+
 	const { users } = useMessageState();
 	const dispatch = useMessageDispatch();
 
@@ -52,10 +54,10 @@ export default function Messages() {
 	} else if (messages.length > 0) {
 		selectedChatMarkup = messages.map((message, index) => (
 			<Fragment key={message.uuid}>
-				<Message  message={message}/>
-				{index === messages.length -1  && (
+				<Message message={message} />
+				{index === messages.length - 1 && (
 					<div className="invisible">
-						<hr className="m-0 "/>
+						<hr className="m-0 " />
 					</div>
 				)}
 			</Fragment>
@@ -64,7 +66,29 @@ export default function Messages() {
 		selectedChatMarkup = <p>You are now connected! send your first message!</p>;
 	}
 
-	return <Col xs={10} md={8} className="messages-box d-flex flex-column-reverse">
-		{selectedChatMarkup}
-	</Col>;
+	const submitMessage = (e)=>{
+		e.preventDefault()
+		if(content==='') return
+
+
+
+	}
+
+	return (
+		<Col xs={10} md={8} className="messages-box d-flex flex-column-reverse">
+			{selectedChatMarkup}
+			<Form onSubmit={submitMessage}>
+				<Form.Group>
+					<Form.Control
+						type="text"
+						className="rounded-pill bg-secondary"
+						placeholder="Type a message..."
+						value={content}
+						onChange={e=>setContent(e.target.value)}
+					/>
+
+				</Form.Group>
+			</Form>
+		</Col>
+	);
 }
