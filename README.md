@@ -39,7 +39,7 @@ Instalar dependencias
 
 Crear tablas en base de datos
 ```
-    cd src && sequelize db:migrate
+  cd src && sequelize db:migrate
 ```
 
 Inicializar servidor
@@ -55,6 +55,7 @@ Inicializar cliente
 ```
 
 <hr/>
+
 **Referencia de proyecto:**
 
 [Classed](https://www.youtube.com/channel/UC2-slOJImuSc20Drbf88qvg)
