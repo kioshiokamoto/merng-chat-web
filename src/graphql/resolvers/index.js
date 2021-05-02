@@ -11,8 +11,8 @@ module.exports = {
     },
     Reaction:{
         createdAt: (parent) =>parent.createdAt.toISOString(),
-        Message: async (parent) => await Message.findByPk(parent.messageId),
-        User: async (parent) => await User.findByPk(parent.userId,{attributes:['username','imageUrl','createdAt']}),
+        message: async (parent) => await Message.findByPk(parent.messageId),
+        user: async (parent) => await User.findByPk(parent.userId,{attributes:['username','imageUrl','createdAt']}),
     },
     Query:{
         ...userResolvers.Query,

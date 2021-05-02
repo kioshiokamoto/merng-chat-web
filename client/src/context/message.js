@@ -5,7 +5,7 @@ const MessageDispatchContext = createContext();
 
 const messageReducer = (state, action) => {
 	let usersCopy, userIndex;
-	const { username, messages, message } = action.payload;
+	const { username, messages, message, reaction } = action.payload;
 	switch (action.type) {
 		case 'SET_USERS':
 			return {
@@ -38,16 +38,59 @@ const messageReducer = (state, action) => {
 
 			userIndex = usersCopy.findIndex((u) => u.username === username);
 
+			message.reactions = []
+
 			let newUser = {
 				...usersCopy[userIndex],
-				messages: usersCopy[userIndex].messages ? [message,...usersCopy[userIndex].messages]: null, 
-				latestMessage: message
-			}
-			usersCopy[userIndex] = newUser
+				messages: usersCopy[userIndex].messages ? [message, ...usersCopy[userIndex].messages] : null,
+				latestMessage: message,
+			};
+			usersCopy[userIndex] = newUser;
 			return {
 				...state,
-				users: usersCopy
+				users: usersCopy,
+			};
+		case 'ADD_REACTION':
+			usersCopy = [...state.users];
+
+			userIndex = usersCopy.findIndex((u) => u.username === username);
+
+			//Make a shallow copy of user
+			let userCopy = { ...usersCopy[userIndex] };
+
+			const messageIndex = userCopy.messages?.findIndex((m) => m.uuid === reaction.message.uuid);
+
+			//Verify message exists
+			if (messageIndex > -1) {
+				//Make a shallow copy of user messages
+				let messagesCopy = [...userCopy.messages];
+
+				//Make a shallow copy of user message reactions
+				let reactionsCopy = [...messagesCopy[messageIndex].reactions];
+
+				const reactionIndex = reactionsCopy.findIndex((r) => r.uuid === reaction.uuid);
+
+				if (reactionIndex > -1) {
+					//Reaction exists, update id
+					reactionsCopy[reactionIndex] = reaction;
+				} else {
+					//New reaction
+					reactionsCopy = [...reactionsCopy, reaction];
+				}
+				messagesCopy[messageIndex] = {
+					...messagesCopy[messageIndex],
+					reactions: reactionsCopy,
+				};
+
+				userCopy = { ...userCopy, messages: messagesCopy };
+				usersCopy[userIndex] = userCopy
 			}
+
+			return {
+				...state,
+				users: usersCopy,
+			};
+
 		// eslint-disable-next-line no-fallthrough
 		default:
 			throw new Error(`Unknown action type: ${action.type}`);

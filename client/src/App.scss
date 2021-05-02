@@ -15,30 +15,54 @@ body {
 	);
 }
 
-.user-div:hover{
+.user-div:hover {
 	background-color: rgb(250, 250, 250);
 }
-.messages-box{
+.messages-box {
 	height: 500px;
 	overflow-y: scroll;
 	scrollbar-width: none;
-	&::-webkit-scrollbar{
+	&::-webkit-scrollbar {
 		display: none;
 	}
 }
 
-.user-image{
+.user-image {
 	width: 50px;
 	height: 50px;
 	object-fit: cover;
 	border-radius: 50%;
 }
-.message-input::placeholder{
+.message-input::placeholder {
 	color: rgba(0, 0, 0, 0.5);
 }
-.info-text{
+.info-text {
 	color: rgba(0, 0, 0, 0.5);
 	text-align: center;
-	margin-bottom: .5rem;
+	margin-bottom: 0.5rem;
+}
+.react-button-popover {
+	height: 30px;
+}
+.react-icon-button {
+	padding-left: 0.25rem;
+	padding-right: 0.25rem;
+	padding-top: 0;
+	padding-bottom: 0;
+	font-size: 1rem;
+	transition: 0.25s;
+	&:hover {
+		text-decoration: none;
+		font-size: 1.5rem;
+	}
 }
 
+.btn:focus {
+	box-shadow: none;
+}
+.reactions-div{
+	position: absolute;
+	right: -10px;
+	bottom: -25px;
+	font-size: 0.9rem;
+}
